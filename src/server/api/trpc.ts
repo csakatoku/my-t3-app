@@ -18,6 +18,7 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
 
 import { getServerAuthSession } from "~/server/auth";
+import { prisma } from "~/server/db";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -33,9 +34,10 @@ type CreateContextOptions = {
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = ({ session }: CreateContextOptions) => {
+const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
-    session,
+    session: opts.session,
+    prisma,
   };
 };
 
@@ -45,10 +47,9 @@ const createInnerTRPCContext = ({ session }: CreateContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = async ({
-  req,
-  res,
-}: CreateNextContextOptions) => {
+export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+  const { req, res } = opts;
+
   // Get the session from the server using the getServerSession wrapper function
   const session = await getServerAuthSession({ req, res });
 
