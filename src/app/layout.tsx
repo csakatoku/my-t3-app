@@ -1,14 +1,10 @@
-import "~/styles/globals.css";
-
-import { Inter } from "next/font/google";
-
 import { TRPCReactProvider } from "~/trpc/react";
 import { SnackbarProvider } from "./providers";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+import theme from "./theme";
 
 export const metadata = {
   title: "Create T3 App",
@@ -23,12 +19,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>
-        <SnackbarProvider>
-          <TRPCReactProvider>
-            {children}
-          </TRPCReactProvider>
-        </SnackbarProvider>
+      <body>
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <SnackbarProvider>
+              <TRPCReactProvider>{children}</TRPCReactProvider>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
