@@ -8,6 +8,7 @@ export default defineConfig({
     environment: "node",
     include: ["./src/**/*.test.{ts,tsx}"],
     exclude: [...configDefaults.exclude],
+    setupFiles: ["./src/test/setup.ts"],
     poolOptions: {
       threads: {
         singleThread: true,
